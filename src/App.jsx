@@ -1,46 +1,62 @@
 import SearchBar from "./components/SearchBar/SearchBar";
 import css from "./App.module.css";
-import axios from "axios";
 import { useEffect, useState } from "react";
 import ImageGallery from "./components/ImageGallery/ImageGallery";
 import Loader from "./components/Loader/Loader";
 import ErrorMessage from "./components/ErrorMessage/ErrorMessage";
+import LoadMoreBtn from "./components/LoadMoreBtn/LoadMoreBtn";
+import { fetchImagesWithTopic } from "./images-api";
 
 const App = () => {
-  const apiKey = "6f8nJhVlihGqobcqR-0goLK_NhA2mMBT08K4p0xc8Qw";
-  let page = 2;
-  let searchValue = "car";
-  const onSubmit = (value) => {
-    console.log(value);
-  };
-
   const [images, setImages] = useState([]);
   const [loading, setLoading] = useState(false);
   const [error, setError] = useState(false);
+  const [loadBtn, setLoadBtn] = useState(false);
+  const [page, setPage] = useState(1);
+  const [topic, setTopic] = useState("");
+
+  const handleSearch = async (newTopic) => {
+    setImages([]);
+    setTopic(newTopic);
+  };
+
+  const handleLoadMore = () => {
+    setPage(page + 1);
+  };
+
   useEffect(() => {
-    async function fetchImages() {
+    if (topic === "") {
+      return;
+    }
+    async function getImages() {
       try {
+        setError(false);
         setLoading(true);
-        const response = await axios.get(
-          `https://api.unsplash.com/search/photos/?client_id=${apiKey}&page=${page}&per_page=9&query=${searchValue}`
-        );
-        setImages(response.data.results);
+        setLoadBtn(false);
+
+        const data = await fetchImagesWithTopic(topic, page);
+        setImages((prevImages) => {
+          return [...prevImages, ...data];
+        });
+        setLoadBtn(true);
       } catch (error) {
         setError(true);
+
+        setLoadBtn(false);
       } finally {
         setLoading(false);
-        setError(false);
       }
     }
-    fetchImages();
-  }, []);
+    getImages();
+  }, [topic, page]);
 
   return (
     <div className={css.container}>
-      <SearchBar onSubmit={onSubmit}></SearchBar>
-      <Loader state={loading}></Loader>
-      <ErrorMessage error={error}></ErrorMessage>
+      <SearchBar onSearch={handleSearch}></SearchBar>
+      {loading && <Loader></Loader>}
+      {error && <ErrorMessage></ErrorMessage>}
       <ImageGallery images={images}></ImageGallery>
+      {loadBtn && <LoadMoreBtn onClick={handleLoadMore}></LoadMoreBtn>}
     </div>
   );
 };
