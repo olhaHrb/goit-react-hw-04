@@ -6,9 +6,9 @@ const ImageGallery = ({ images }) => {
     <div>
       {images.length > 0 && (
         <ul className={css.list}>
-          {images.map(({ id, urls }) => (
+          {images.map(({ id, urls, alt_description }) => (
             <li key={id} className={css.item}>
-              <ImageCard url={urls}></ImageCard>
+              <ImageCard urls={urls} alt={alt_description}></ImageCard>
             </li>
           ))}
         </ul>

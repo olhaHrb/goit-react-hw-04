@@ -1,9 +1,11 @@
 import css from "./ImageCard.module.css";
 
-const ImageCard = ({ url }) => {
+const ImageCard = ({ urls, alt }) => {
   return (
     <div className={css.card}>
-      <img src={url.small} alt="" className={css.image} />
+      <a href={urls.regular} target="_blank">
+        <img src={urls.small} alt={alt} className={css.image} />
+      </a>
     </div>
   );
 };
