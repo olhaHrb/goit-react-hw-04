@@ -7,7 +7,7 @@ import ImageGallery from "./components/ImageGallery/ImageGallery";
 import Loader from "./components/Loader/Loader";
 import ErrorMessage from "./components/ErrorMessage/ErrorMessage";
 import LoadMoreBtn from "./components/LoadMoreBtn/LoadMoreBtn";
-
+import ImageModal from "./components/ImageModal/ImageModal";
 import { fetchImagesWithTopic } from "./images-api";
 
 const App = () => {
@@ -17,6 +17,8 @@ const App = () => {
   const [loadBtn, setLoadBtn] = useState(false);
   const [page, setPage] = useState(1);
   const [topic, setTopic] = useState("");
+  const [modalIsOpen, setModalIsOpen] = useState(false);
+  const [dataModal, setDataModal] = useState({});
 
   const handleSearch = async (newTopic) => {
     setImages([]);
@@ -54,13 +56,20 @@ const App = () => {
     getImages();
   }, [topic, page]);
 
+  const onImageClick = (dataModal) => {
+    console.log(dataModal);
+    setModalIsOpen(true);
+    setDataModal(dataModal);
+  };
+
   return (
     <div className={css.container}>
       <SearchBar onSearch={handleSearch}></SearchBar>
       {loading && <Loader></Loader>}
       {error && <ErrorMessage></ErrorMessage>}
-      <ImageGallery images={images}></ImageGallery>
+      <ImageGallery images={images} onImageClick={onImageClick}></ImageGallery>
       {loadBtn && <LoadMoreBtn onClick={handleLoadMore}></LoadMoreBtn>}
+      {modalIsOpen && <ImageModal data={dataModal}></ImageModal>}
     </div>
   );
 };
