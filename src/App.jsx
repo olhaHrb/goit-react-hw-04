@@ -1,10 +1,13 @@
-import SearchBar from "./components/SearchBar/SearchBar";
 import css from "./App.module.css";
+
 import { useEffect, useState } from "react";
+
+import SearchBar from "./components/SearchBar/SearchBar";
 import ImageGallery from "./components/ImageGallery/ImageGallery";
 import Loader from "./components/Loader/Loader";
 import ErrorMessage from "./components/ErrorMessage/ErrorMessage";
 import LoadMoreBtn from "./components/LoadMoreBtn/LoadMoreBtn";
+
 import { fetchImagesWithTopic } from "./images-api";
 
 const App = () => {
@@ -17,6 +20,7 @@ const App = () => {
 
   const handleSearch = async (newTopic) => {
     setImages([]);
+    setPage(1);
     setTopic(newTopic);
   };
 
