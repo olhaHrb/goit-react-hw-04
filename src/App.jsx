@@ -57,11 +57,14 @@ const App = () => {
   }, [topic, page]);
 
   const onImageClick = (dataModal) => {
-    console.log(dataModal);
+    // console.log(dataModal);
     setModalIsOpen(true);
     setDataModal(dataModal);
   };
 
+  const closeModal = () => {
+    setModalIsOpen(false);
+  };
   return (
     <div className={css.container}>
       <SearchBar onSearch={handleSearch}></SearchBar>
@@ -69,7 +72,9 @@ const App = () => {
       {error && <ErrorMessage></ErrorMessage>}
       <ImageGallery images={images} onImageClick={onImageClick}></ImageGallery>
       {loadBtn && <LoadMoreBtn onClick={handleLoadMore}></LoadMoreBtn>}
-      {modalIsOpen && <ImageModal data={dataModal}></ImageModal>}
+      {modalIsOpen && (
+        <ImageModal data={dataModal} close={closeModal}></ImageModal>
+      )}
     </div>
   );
 };
